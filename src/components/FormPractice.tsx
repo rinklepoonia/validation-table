@@ -16,6 +16,17 @@ export const FormPractice: React.FC = () => {
   const [numError, setNumError] = useState("");
   const [submittedData, setSubmittedData] = useState<FormData[]>([]);
 
+  useEffect(() => {
+    const savedData = localStorage.getItem("submittedData");
+    if (savedData) {
+      setSubmittedData(JSON.parse(savedData));
+    }
+  }, []);
+
+  const saveToLocalStorage = (dataSave: FormData[]) => {
+    localStorage.setItem("submittedData", JSON.stringify(dataSave));
+  };
+
   const FormSubmit = (e: FormEvent): void => {
     e.preventDefault();
     const isValidUsername = validateUsername();
@@ -30,8 +41,10 @@ export const FormPractice: React.FC = () => {
         setMailError("Email is already submitted.");
         return;
       }
-      const newData: FormData = { name, email, number };
-      setSubmittedData([...submittedData, newData]);
+      const storeTableData: FormData = { name, email, number };
+      const updatedData = [...submittedData, storeTableData];
+      setSubmittedData(updatedData);
+      saveToLocalStorage(updatedData);
       setName("");
       setMail("");
       setNumber("");
@@ -94,7 +107,7 @@ export const FormPractice: React.FC = () => {
               )}
             </div>
           </div>
-          <div className="flex items-center justify-center gap-20 mt-7">
+          <div className="flex  justify-center gap-20 mt-7">
             <div className="flex flex-col items-start gap-2">
               <label htmlFor="email" className="text-lg text-black">
                 Email:
@@ -142,24 +155,26 @@ export const FormPractice: React.FC = () => {
           </div>
         </form>
         {submittedData.length > 0 && (
-          <table className="border-collapse w-full mt-20">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Mail</th>
-                <th>Phone</th>
-              </tr>
-            </thead>
-            <tbody>
-              {submittedData.map((obj, index) => (
-                <tr key={index}>
-                  <td className="border p-2">{obj.name}</td>
-                  <td className="border p-2">{obj.email}</td>
-                  <td className="border p-2">{obj.number}</td>
+          <div className="">
+            <table className="border-collapse w-full mt-20">
+              <thead className="d-flex">
+                <tr>
+                  <th>Name</th>
+                  <th>Mail</th>
+                  <th>Phone</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {submittedData.map((obj, index) => (
+                  <tr key={index}>
+                    <td className="border p-2">{obj.name}</td>
+                    <td className="border p-2">{obj.email}</td>
+                    <td className="border p-2">{obj.number}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         )}
       </div>
     </div>
