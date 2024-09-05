@@ -16,17 +16,6 @@ export const FormPractice: React.FC = () => {
   const [numError, setNumError] = useState("");
   const [submittedData, setSubmittedData] = useState<FormData[]>([]);
 
-  // useEffect(() => {
-  //   const savedData = localStorage.getItem("submittedData");
-  //   if (savedData) {
-  //     setSubmittedData(JSON.parse(savedData));
-  //   }
-  // }, []);
-
-  // const saveToLocalStorage = (data: FormData[]) => {
-  //   localStorage.setItem("submittedData", JSON.stringify(data));
-  // };
-
   const FormSubmit = (e: FormEvent): void => {
     e.preventDefault();
     const isValidUsername = validateUsername();
@@ -34,22 +23,19 @@ export const FormPractice: React.FC = () => {
     const isValidNumber = validateNumber();
 
     if (isValidUsername && isValidMail && isValidNumber) {
+      const emailExists = submittedData.some(
+        (mailData) => mailData.email === email
+      );
+      if (emailExists) {
+        setMailError("Email is already submitted.");
+        return;
+      }
       const newData: FormData = { name, email, number };
-       const updatedData = [...submittedData, newData];
-       setSubmittedData(updatedData);
-      //  saveToLocalStorage(updatedData);
+      setSubmittedData([...submittedData, newData]);
       setName("");
       setMail("");
       setNumber("");
       setMailError("");
-    }
-
-    const emailExists = submittedData.some(
-      (mailData) => mailData.email === email
-    );
-    if (emailExists) {
-      setMailError("Email is already submitted.");
-      return;
     }
   };
 
