@@ -84,7 +84,7 @@ export const FormPractice: React.FC = () => {
   };
 
   return (
-    <div className="">
+    <div className="flex justify-center">
       <div className="container">
         <form onSubmit={FormSubmit}>
           <div className="flex items-center justify-center gap-20">
